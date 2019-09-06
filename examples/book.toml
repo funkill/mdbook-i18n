@@ -1,0 +1,16 @@
+[book]
+authors = ["funkill2"]
+language = "en"
+multilingual = true
+src = "src"
+title = "Test book"
+
+[[output.i18n.translations]]
+language = "ru"
+translators = ["Translator name"]
+title = "Тестовая книга"
+
+[[output.i18n.translations]]
+language = "es"
+translators = ["Nombre del traductor"]
+title = "Libro de pruebas"
