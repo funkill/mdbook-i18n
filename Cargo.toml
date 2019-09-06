@@ -3,6 +3,10 @@ name = "mdbook-i18n"
 version = "0.1.0"
 authors = ["funkill2 <funkill2@gmail.com>"]
 edition = "2018"
+exclude = ["/examples/*"]
+keywords = ["book", "gitbook", "rustbook", "markdown", "mdbook", "i18n", "internationalization", "l10n", "localization"]
+repository = "https://github.com/funkill/mdbook-i18n"
+description = "L10n/i18n plugin for mdbook"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -11,3 +15,7 @@ mdbook = "0.3.1"
 toml = "0.5"
 log = "0.4"
 failure = "0.1.5"
+
+[[bin]]
+doc = false
+name = "mdbook-i18n"
