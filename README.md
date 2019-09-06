@@ -34,7 +34,7 @@ translations. After that `mdbook` runs for every translation.
 from config).
 2. Books don't share assets. Because native render of mdbook can build only one build, every build
 generate full tree of assets.
-3. Books don't has links to diferent l10m. Because used native render without custom templates.
+3. Books don't has links to different l10n. Because used native render without custom templates.
 4. Maybe everything else what i forget.
 
 ## License
