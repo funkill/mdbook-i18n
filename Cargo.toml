@@ -7,6 +7,7 @@ exclude = ["/examples/*"]
 keywords = ["book", "gitbook", "rustbook", "markdown", "mdbook", "i18n", "internationalization", "l10n", "localization"]
 repository = "https://github.com/funkill/mdbook-i18n"
 description = "L10n/i18n plugin for mdbook"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
