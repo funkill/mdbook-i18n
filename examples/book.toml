@@ -1,7 +1,7 @@
 [book]
 authors = ["funkill2"]
 language = "en"
-multilingual = true
+multilingual = true # This parameter do nothing for this plugin. Ony used (really not) in mdbook
 src = "src"
 title = "Test book"
 
