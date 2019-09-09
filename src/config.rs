@@ -204,6 +204,7 @@ impl TryFrom<RenderContext> for Config {
 pub(crate) struct PreparedConfig {
     pub(crate) mdbook_config: MdbookConfig,
     pub(crate) root: PathBuf,
+    pub(crate) lang: String,
 }
 
 impl From<Config> for Vec<PreparedConfig> {
@@ -216,16 +217,18 @@ impl From<Config> for Vec<PreparedConfig> {
             .into_iter()
             .map(|translation| {
                 let mut build = build_config.clone();
-                build.build_dir.push(translation.language.clone());
+                let language = translation.language.clone();
+                build.build_dir.push(&language);
 
                 let mut cfg = MdbookConfig::default();
                 cfg.book = translation.into();
                 cfg.build = build;
-                cfg
+                (cfg, language)
             })
-            .map(|config| PreparedConfig {
+            .map(|(config, lang)| PreparedConfig {
                 mdbook_config: config,
                 root: root.clone(),
+                lang,
             })
             .collect()
     }
