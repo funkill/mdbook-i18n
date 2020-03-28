@@ -10,6 +10,7 @@ use mdbook::{
     renderer::RenderContext,
 };
 use toml::Value;
+use toml::value::Table;
 
 const BASE_OUT_DIR: &str = "i18n";
 
@@ -24,6 +25,7 @@ impl TryFrom<RenderContext> for RenderConfig {
         let build_config = config.build.clone();
         let root = context.root.clone();
 
+        let output = config.get_mut("output.html").unwrap_or(&mut Value::Table(Table::default())).clone();
         let mut books = config
             .get_mut("output.i18n.translations")
             .and_then(|value| value.as_array())
@@ -52,7 +54,7 @@ impl TryFrom<RenderContext> for RenderConfig {
                     book
                 };
 
-                RenderItem::from(book, build_config.clone(), root.clone(), language)
+                RenderItem::from(book, build_config.clone(), root.clone(), output.clone(), language)
             })
             .collect::<Vec<_>>();
 
@@ -62,7 +64,7 @@ impl TryFrom<RenderContext> for RenderConfig {
             .clone()
             .expect("Language for main book not found");
 
-        let main_book = RenderItem::from(config.book, config.build, root, language);
+        let main_book = RenderItem::from(config.book, config.build, root, output, language);
 
         books.insert(0, main_book);
 
@@ -93,6 +95,7 @@ impl RenderItem {
         book: BookConfig,
         build: BuildConfig,
         root: PathBuf,
+        rest: Value,
         language: String,
     ) -> RenderItem {
         let mut build = build;
@@ -101,15 +104,16 @@ impl RenderItem {
             build.build_dir.push(language);
         }
 
-        fn mdbook_from_configs(book: BookConfig, build: BuildConfig) -> MdBookConfig {
+        fn mdbook_from_configs(book: BookConfig, build: BuildConfig, rest: Value) -> MdBookConfig {
             let mut new_config = MdBookConfig::default();
             new_config.book = book;
             new_config.build = build;
+            new_config.set("output.html", rest.clone()).unwrap();
             new_config
         }
 
         set_build_path(&mut build, &language);
-        let config = mdbook_from_configs(book, build);
+        let config = mdbook_from_configs(book, build, rest);
 
         RenderItem {
             mdbook_config: config,
