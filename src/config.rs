@@ -1,3 +1,7 @@
+use mdbook::{
+    config::{BookConfig, BuildConfig, Config as MdBookConfig},
+    renderer::RenderContext,
+};
 use std::{
     convert::TryFrom,
     error::Error as StdError,
@@ -5,12 +9,8 @@ use std::{
     path::PathBuf,
     result::Result as StdResult,
 };
-use mdbook::{
-    config::{BookConfig, BuildConfig, Config as MdBookConfig},
-    renderer::RenderContext,
-};
-use toml::Value;
 use toml::value::Table;
+use toml::Value;
 
 const BASE_OUT_DIR: &str = "i18n";
 
@@ -25,7 +25,10 @@ impl TryFrom<RenderContext> for RenderConfig {
         let build_config = config.build.clone();
         let root = context.root;
 
-        let output = config.get_mut("output.html").unwrap_or(&mut Value::Table(Table::default())).clone();
+        let output = config
+            .get_mut("output.html")
+            .unwrap_or(&mut Value::Table(Table::default()))
+            .clone();
         let mut books = config
             .get_mut("output.i18n.translations")
             .and_then(|value| value.as_array())
@@ -52,7 +55,13 @@ impl TryFrom<RenderContext> for RenderConfig {
                     book
                 };
 
-                RenderItem::from(book, build_config.clone(), root.clone(), output.clone(), language)
+                RenderItem::from(
+                    book,
+                    build_config.clone(),
+                    root.clone(),
+                    output.clone(),
+                    language,
+                )
             })
             .collect::<Vec<_>>();
 

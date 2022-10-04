@@ -1,10 +1,7 @@
 mod config;
 mod original_render;
 
-use crate::{
-    original_render::*,
-    config::RenderConfig,
-};
+use crate::{config::RenderConfig, original_render::*};
 use mdbook::renderer::RenderContext;
 use std::{convert::TryInto, io};
 
@@ -28,10 +25,10 @@ fn get_config() -> anyhow::Result<RenderConfig> {
 
 // Copied from mdbook
 fn init_logger() {
-    use env_logger::Builder;
-    use std::{env, io::Write};
-    use log::LevelFilter;
     use chrono::Local;
+    use env_logger::Builder;
+    use log::LevelFilter;
+    use std::{env, io::Write};
 
     let mut builder = Builder::new();
 
