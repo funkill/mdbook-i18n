@@ -8,7 +8,3 @@ updates:
   open-pull-requests-limit: 10
   assignees:
   - funkill
-  ignore:
-  - dependency-name: mdbook
-    versions:
-    - 0.4.6
