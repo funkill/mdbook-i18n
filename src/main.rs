@@ -1,17 +1,11 @@
 mod config;
 mod original_render;
 
-use crate::{
-    original_render::*,
-    config::RenderConfig,
-};
-use failure::{Error, SyncFailure};
+use crate::{config::RenderConfig, original_render::*};
 use mdbook::renderer::RenderContext;
 use std::{convert::TryInto, io};
 
-type Result<T> = std::result::Result<T, Error>;
-
-fn main() -> Result<()> {
+fn main() -> anyhow::Result<()> {
     init_logger();
 
     log::info!("Running mdbook-i18n");
@@ -20,26 +14,21 @@ fn main() -> Result<()> {
     OriginalRender::render(config)
 }
 
-fn get_config() -> Result<RenderConfig> {
+fn get_config() -> anyhow::Result<RenderConfig> {
     log::debug!("Getting config");
     let mut stdin = io::stdin();
 
-    RenderContext::from_json(&mut stdin)
-        .map_err(error_from_unsync)?
+    RenderContext::from_json(&mut stdin)?
         .try_into()
         .map_err(Into::into)
 }
 
-fn error_from_unsync<E: std::error::Error + Send + 'static>(e: E) -> Error {
-    SyncFailure::new(e).into()
-}
-
 // Copied from mdbook
 fn init_logger() {
-    use env_logger::Builder;
-    use std::{env, io::Write};
-    use log::LevelFilter;
     use chrono::Local;
+    use env_logger::Builder;
+    use log::LevelFilter;
+    use std::{env, io::Write};
 
     let mut builder = Builder::new();
 
