@@ -23,7 +23,7 @@ impl TryFrom<RenderContext> for RenderConfig {
     fn try_from(context: RenderContext) -> StdResult<Self, Self::Error> {
         let mut config = context.config;
         let build_config = config.build.clone();
-        let root = context.root.clone();
+        let root = context.root;
 
         let output = config.get_mut("output.html").unwrap_or(&mut Value::Table(Table::default())).clone();
         let mut books = config
@@ -32,9 +32,7 @@ impl TryFrom<RenderContext> for RenderConfig {
             .cloned()
             .unwrap_or_default()
             .into_iter()
-            .map(|value| value.as_table().cloned())
-            .filter(|option| option.is_some())
-            .map(Option::unwrap)
+            .filter_map(|value| value.as_table().cloned())
             .map(|table| {
                 let language = String::from(
                     table
@@ -108,7 +106,7 @@ impl RenderItem {
             let mut new_config = MdBookConfig::default();
             new_config.book = book;
             new_config.build = build;
-            new_config.set("output.html", rest.clone()).unwrap();
+            new_config.set("output.html", rest).unwrap();
             new_config
         }
 
