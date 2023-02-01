@@ -12,7 +12,8 @@ use std::{
 use toml::value::Table;
 use toml::Value;
 
-const BASE_OUT_DIR: &str = "html";
+const BASE_OUT_DIR: &str = "i18n";
+const BASE_SRC_DIR: &str = "translations";
 
 #[derive(Debug)]
 pub(crate) struct RenderConfig(pub(crate) Vec<RenderItem>);
@@ -40,17 +41,14 @@ impl TryFrom<RenderContext> for RenderConfig {
                 let language = String::from(
                     table
                         .get("language")
-                        .expect("Not found for one of translations")
+                        .expect("Language not found for one of translations")
                         .as_str()
                         .expect("Language for one of translations not a string"),
                 );
-                let src = String::from(
-                    table
-                        .get("src")
-                        .expect("Not found for one of translations")
-                        .as_str()
-                        .expect("Language for one of translations not a string"),
-                );
+                let src = String::from(table.get("src").map_or(BASE_SRC_DIR, |v| {
+                    v.as_str()
+                        .expect("Src for one of translations not a string")
+                }));
                 let book = {
                     let mut book: BookConfig =
                         Value::Table(table).try_into().expect("Can't parse config");
